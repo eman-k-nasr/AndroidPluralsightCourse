@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">AndroidPluralsightCourse</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_send_email">Send As an Email</string>
 </resources>
