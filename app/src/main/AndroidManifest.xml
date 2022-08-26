@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidPluralsightCourse.NoActionBar">
         <activity
-            android:name=".notes.NoteActivity"
+            android:name=".notes.NoteListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".counter.CounterActivity"
+            android:name=".notes.NoteActivity"
             android:exported="false"/>
+        <activity
+            android:name=".counter.CounterActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
