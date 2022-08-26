@@ -23,13 +23,16 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
     public static final String NOTE_INFO = "com.example.androidpluralsightcourse.notes.data.NOTE_INFO";
-    private NoteInfo mNewNote;
+    private NoteInfo mNote;
     private boolean mIsNewNote;
     private EditText textNoteTitle;
     private EditText textNoteText;
     private Spinner spinnerCourses;
     private int mNewNotePosition;
     private boolean mIsCancelling;
+    private String mOriginalNoteCourseId;
+    private String mOriginalNoteTitle;
+    private String mOriginalNoteText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +69,10 @@ public class NoteActivity extends AppCompatActivity {
 
     private void displayNote() {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        int courseIndex = courses.indexOf(mNewNote.getCourse());
+        int courseIndex = courses.indexOf(mNote.getCourse());
         spinnerCourses.setSelection(courseIndex);
-        textNoteTitle.setText(mNewNote.getTitle());
-        textNoteText.setText(mNewNote.getText());
+        textNoteTitle.setText(mNote.getTitle());
+        textNoteText.setText(mNote.getText());
     }
 
     private void readDisplayStateValues() {
@@ -79,14 +82,15 @@ public class NoteActivity extends AppCompatActivity {
         if(mIsNewNote){
             createNewNote();
         }else{
-            mNewNote = DataManager.getInstance().getNotes().get(position);
+            mNote = DataManager.getInstance().getNotes().get(position);
         }
+        saveOriginalNoteValues();
     }
 
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
         mNewNotePosition = dm.createNewNote();
-        mNewNote = dm.getNotes().get(mNewNotePosition);
+        mNote = dm.getNotes().get(mNewNotePosition);
     }
 
     @Override
@@ -95,6 +99,8 @@ public class NoteActivity extends AppCompatActivity {
         if(mIsCancelling){
             if(mIsNewNote){
                 DataManager.getInstance().removeNote(mNewNotePosition);
+            }else{
+                storePreviousNoteValues();
             }
         }else{
             saveNote();
@@ -136,8 +142,22 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        mNewNote.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
-        mNewNote.setTitle(textNoteTitle.getText().toString());
-        mNewNote.setText(textNoteText.getText().toString());
+        mNote.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
+        mNote.setTitle(textNoteTitle.getText().toString());
+        mNote.setText(textNoteText.getText().toString());
+    }
+
+    private void saveOriginalNoteValues() {
+        if(mIsNewNote) return;
+        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mOriginalNoteTitle = mNote.getTitle();
+        mOriginalNoteText = mNote.getText();
+    }
+
+    private void storePreviousNoteValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(mOriginalNoteTitle);
+        mNote.setText(mOriginalNoteText);
     }
 }
