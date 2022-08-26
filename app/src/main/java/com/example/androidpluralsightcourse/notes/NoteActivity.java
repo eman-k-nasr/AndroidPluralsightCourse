@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.androidpluralsightcourse.R;
+import com.example.androidpluralsightcourse.notes.data.CourseInfo;
+import com.example.androidpluralsightcourse.notes.data.DataManager;
 
 import java.util.List;
 

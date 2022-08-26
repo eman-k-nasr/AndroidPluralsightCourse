@@ -1,7 +1,4 @@
-package com.example.androidpluralsightcourse.notes;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.example.androidpluralsightcourse.notes.data;
 
 public final class NoteInfo {
     private CourseInfo mCourse;
