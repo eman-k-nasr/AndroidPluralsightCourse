@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AndroidPluralsightCourse</string>
     <string name="action_send_email">Send As an Email</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

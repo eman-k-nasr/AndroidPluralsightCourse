@@ -23,11 +23,13 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
     public static final String NOTE_INFO = "com.example.androidpluralsightcourse.notes.data.NOTE_INFO";
-    private NoteInfo mNote;
+    private NoteInfo mNewNote;
     private boolean mIsNewNote;
     private EditText textNoteTitle;
     private EditText textNoteText;
     private Spinner spinnerCourses;
+    private int mNewNotePosition;
+    private boolean mIsCancelling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,19 +66,40 @@ public class NoteActivity extends AppCompatActivity {
 
     private void displayNote() {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        int courseIndex = courses.indexOf(mNote.getCourse());
+        int courseIndex = courses.indexOf(mNewNote.getCourse());
         spinnerCourses.setSelection(courseIndex);
-        textNoteTitle.setText(mNote.getTitle());
-        textNoteText.setText(mNote.getText());
+        textNoteTitle.setText(mNewNote.getTitle());
+        textNoteText.setText(mNewNote.getText());
     }
 
     private void readDisplayStateValues() {
         Intent intent = getIntent();
         int position = intent.getIntExtra(NOTE_POSITION,POSITION_NOT_SET);
         mIsNewNote = position == POSITION_NOT_SET;
-        if(!mIsNewNote){
-            mNote = DataManager.getInstance().getNotes().get(position);
+        if(mIsNewNote){
+            createNewNote();
+        }else{
+            mNewNote = DataManager.getInstance().getNotes().get(position);
         }
+    }
+
+    private void createNewNote() {
+        DataManager dm = DataManager.getInstance();
+        mNewNotePosition = dm.createNewNote();
+        mNewNote = dm.getNotes().get(mNewNotePosition);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mIsCancelling){
+            if(mIsNewNote){
+                DataManager.getInstance().removeNote(mNewNotePosition);
+            }
+        }else{
+            saveNote();
+        }
+
     }
 
     @Override
@@ -88,9 +111,14 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_send_email) {
-            sendEmail();
-            return true;
+        switch (id){
+            case R.id.action_send_email:
+                sendEmail();
+                break;
+            case R.id.action_cancel:
+                mIsCancelling = true;
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -105,5 +133,11 @@ public class NoteActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(intent);
+    }
+
+    private void saveNote() {
+        mNewNote.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
+        mNewNote.setTitle(textNoteTitle.getText().toString());
+        mNewNote.setText(textNoteText.getText().toString());
     }
 }
