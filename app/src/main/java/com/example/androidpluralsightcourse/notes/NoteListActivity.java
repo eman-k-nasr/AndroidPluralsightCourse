@@ -1,5 +1,7 @@
 package com.example.androidpluralsightcourse.notes;
 
+import static com.example.androidpluralsightcourse.notes.Constants.NOTE_POSITION;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -47,7 +49,8 @@ public class NoteListActivity extends AppCompatActivity {
         listNotes.setOnItemClickListener((adapterView, view, position, l) -> {
             Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
             NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
-            intent.putExtra(NoteActivity.NOTE_INFO, note);
+//            intent.putExtra(NoteActivity.NOTE_INFO, note);
+            intent.putExtra(NOTE_POSITION,position);
             startActivity(intent);
         });
 

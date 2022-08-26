@@ -1,5 +1,8 @@
 package com.example.androidpluralsightcourse.notes;
 
+import static com.example.androidpluralsightcourse.notes.Constants.NOTE_POSITION;
+import static com.example.androidpluralsightcourse.notes.Constants.POSITION_NOT_SET;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -63,8 +66,11 @@ public class NoteActivity extends AppCompatActivity {
 
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        mNote = intent.getParcelableExtra(NOTE_INFO);
-        mIsNewNote = mNote == null;
+        int position = intent.getIntExtra(NOTE_POSITION,POSITION_NOT_SET);
+        mIsNewNote = position == POSITION_NOT_SET;
+        if(!mIsNewNote){
+            mNote = DataManager.getInstance().getNotes().get(position);
+        }
     }
 
     @Override
