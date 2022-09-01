@@ -1,4 +1,4 @@
-package com.example.androidpluralsightcourse.notes;
+package com.example.androidpluralsightcourse.notes.views;
 
 import static com.example.androidpluralsightcourse.notes.Constants.NOTE_POSITION;
 import static com.example.androidpluralsightcourse.notes.Constants.POSITION_NOT_SET;
