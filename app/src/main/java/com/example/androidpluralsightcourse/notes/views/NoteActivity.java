@@ -152,8 +152,17 @@ public class NoteActivity extends AppCompatActivity {
         getNextNote();
         saveOriginalNoteValues();
         displayNote();
+        invalidateOptionsMenu();
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem nextMenuItem = menu.findItem(R.id.action_next);
+        int lastNoteIndex = DataManager.getInstance().getNotes().size() -1 ;
+        nextMenuItem.setEnabled(mNotePosition != lastNoteIndex);
+        return super.onPrepareOptionsMenu(menu);
+    }
+    
     private void getNextNote(){
         ++mNotePosition;
         mNote = getNoteByPosition(mNotePosition);
