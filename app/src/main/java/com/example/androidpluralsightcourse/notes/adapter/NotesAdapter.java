@@ -18,13 +18,13 @@ import com.example.androidpluralsightcourse.notes.views.NoteActivity;
 
 import java.util.List;
 
-public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private final Context mContext;
     private final List<NoteInfo> mNotes;
     private final LayoutInflater mLayoutInflater;
 
-    public NoteRecyclerAdapter(Context context, List<NoteInfo> notes) {
+    public NotesAdapter(Context context, List<NoteInfo> notes) {
         mContext = context;
         mNotes = notes;
         mLayoutInflater = LayoutInflater.from(mContext);
