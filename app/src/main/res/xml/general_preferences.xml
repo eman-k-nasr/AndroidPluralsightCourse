@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        app:key="@string/user_key"
+        app:title="@string/user_name_title"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        android:icon="@android:drawable/ic_dialog_email"
+        app:key="@string/email_key"
+        app:title="@string/email_title"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        android:icon="@android:drawable/ic_menu_help"
+        app:defaultValue="twitter"
+        app:entries="@array/social_media_entries"
+        app:entryValues="@array/social_media_values"
+        app:key="@string/social_key"
+        app:title="@string/prefered_social_media_title"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>
