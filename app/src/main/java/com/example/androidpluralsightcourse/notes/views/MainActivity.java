@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         notesAdapter.notifyDataSetChanged();
-//        coursesAdapter.notifyDataSetChanged();
     }
 
     private void navigateToCreateNewNote(){
@@ -121,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void displayCourses() {
         RecyclerView recyclerView = binding.appBarMain.contentMain.contentRecyclerView;
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,
+                getResources().getInteger(R.integer.courses_grid_span));
         recyclerView.setLayoutManager(layoutManager);
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         coursesAdapter = new CoursesAdapter(this, courses);

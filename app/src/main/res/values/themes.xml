@@ -33,4 +33,8 @@
 
     <style name="Theme.AndroidPluralsightCourse.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="CourseTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
