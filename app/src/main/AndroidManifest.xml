@@ -10,11 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidPluralsightCourse.NoActionBar">
         <activity
-            android:name=".notes.views.SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".notes.views.MainActivity"
+            android:name=".listview.ListViewExampleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".notes.views.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".notes.views.MainActivity"
+            android:exported="false"/>
         <activity
             android:name=".activityWithResults.FirstActivity"
             android:exported="false" />
