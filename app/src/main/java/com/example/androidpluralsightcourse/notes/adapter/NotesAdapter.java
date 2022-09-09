@@ -1,6 +1,6 @@
 package com.example.androidpluralsightcourse.notes.adapter;
 
-import static com.example.androidpluralsightcourse.notes.Constants.NOTE_POSITION;
+import static com.example.androidpluralsightcourse.notes.Constants.NOTE_ID;
 
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +42,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         NoteInfo note = mNotes.get(position);
         holder.mTextCourse.setText(note.getCourse().getTitle());
         holder.mTextTitle.setText(note.getTitle());
+        holder.noteId = note.getId();
     }
 
 
@@ -54,6 +55,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         public final TextView mTextCourse;
         public final TextView mTextTitle;
+        public int noteId;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +64,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mContext, NoteActivity.class);
-                intent.putExtra(NOTE_POSITION, this.getAdapterPosition());
+                intent.putExtra(NOTE_ID, noteId);
                 mContext.startActivity(intent);
             });
         }
