@@ -2,6 +2,8 @@ package com.example.androidpluralsightcourse.notes.views;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import com.example.androidpluralsightcourse.databinding.ActivityMainBinding;
 import com.example.androidpluralsightcourse.notes.adapter.CoursesAdapter;
 import com.example.androidpluralsightcourse.notes.adapter.NotesAdapter;
 import com.example.androidpluralsightcourse.notes.data.DataManager;
+import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperOpenHelper;
 import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 import com.example.androidpluralsightcourse.notes.models.NoteInfo;
@@ -64,8 +67,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        notesAdapter.notifyDataSetChanged();
+        notesAdapter.changeCursor(getNotesCursor());
         updateNavHeader();
+    }
+
+    private Cursor getNotesCursor() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        final String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_COURSE_ID,
+                NoteInfoEntry._ID};
+
+        String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
+        return  db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                null, null, null, null, noteOrderBy);
     }
 
     private void updateNavHeader() {
@@ -187,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-        notesAdapter = new NotesAdapter(this, notes);
+        notesAdapter = new NotesAdapter(this, null);
         recyclerView.setAdapter(notesAdapter);
         setMenuItemChecked(R.id.menu_notes_item);
     }

@@ -4,6 +4,7 @@ import static com.example.androidpluralsightcourse.notes.Constants.NOTE_ID;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidpluralsightcourse.R;
+import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract;
+import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.example.androidpluralsightcourse.notes.views.NoteActivity;
 
@@ -21,15 +24,34 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private final Context mContext;
-    private final List<NoteInfo> mNotes;
+    private Cursor mNotesCursor;
     private final LayoutInflater mLayoutInflater;
+    private int mCoursePos;
+    private int mNoteTitlePos;
+    private int mIdPos;
 
-    public NotesAdapter(Context context, List<NoteInfo> notes) {
+    public NotesAdapter(Context context,Cursor cursor) {
         mContext = context;
-        mNotes = notes;
+        mNotesCursor = cursor;
         mLayoutInflater = LayoutInflater.from(mContext);
+        populateColumnPositions();
     }
 
+    private void populateColumnPositions() {
+        if(mNotesCursor == null)
+            return;
+        mCoursePos = mNotesCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mNoteTitlePos = mNotesCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        mIdPos = mNotesCursor.getColumnIndex(NoteInfoEntry._ID);
+    }
+
+    public void changeCursor(Cursor cursor) {
+        if(mNotesCursor != null)
+            mNotesCursor.close();
+        mNotesCursor = cursor;
+        populateColumnPositions();
+        notifyDataSetChanged();
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,16 +61,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NoteInfo note = mNotes.get(position);
-        holder.mTextCourse.setText(note.getCourse().getTitle());
-        holder.mTextTitle.setText(note.getTitle());
-        holder.noteId = note.getId();
+        mNotesCursor.moveToPosition(position);
+        String courseId = mNotesCursor.getString(mCoursePos);
+        String noteTitle = mNotesCursor.getString(mNoteTitlePos);
+        int noteId = mNotesCursor.getInt(mIdPos);
+
+        holder.mTextCourse.setText(courseId);
+        holder.mTextTitle.setText(noteTitle);
+        holder.noteId = noteId;
     }
 
 
     @Override
     public int getItemCount() {
-        return mNotes.size();
+        return mNotesCursor == null ? 0 : mNotesCursor.getCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
