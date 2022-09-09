@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.CourseInfo;
+import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 
 import java.util.List;
 

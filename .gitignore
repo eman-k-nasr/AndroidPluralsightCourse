@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+/NoteKeeper.db
+/NoteKeeper.db-shm
+/NoteKeeper.db-wal

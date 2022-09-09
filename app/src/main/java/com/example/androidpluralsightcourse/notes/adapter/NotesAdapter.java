@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.NoteInfo;
+import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.example.androidpluralsightcourse.notes.views.NoteActivity;
 
 import java.util.List;

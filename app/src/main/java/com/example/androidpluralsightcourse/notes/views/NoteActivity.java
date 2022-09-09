@@ -15,9 +15,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.CourseInfo;
+import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 import com.example.androidpluralsightcourse.notes.data.DataManager;
-import com.example.androidpluralsightcourse.notes.data.NoteInfo;
+import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.androidpluralsightcourse.notes.data;
+package com.example.androidpluralsightcourse.notes.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

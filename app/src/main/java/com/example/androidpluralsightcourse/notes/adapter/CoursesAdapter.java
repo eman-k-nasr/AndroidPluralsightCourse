@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.CourseInfo;
+import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-            courseTitleTextView = (TextView) itemView.findViewById(R.id.courseTitleTextView);
+            courseTitleTextView = itemView.findViewById(R.id.courseTitleTextView);
             itemView.setOnClickListener(v -> {
 
             });

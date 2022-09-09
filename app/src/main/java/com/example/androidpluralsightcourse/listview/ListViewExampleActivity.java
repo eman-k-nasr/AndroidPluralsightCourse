@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.CourseInfo;
+import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 import com.example.androidpluralsightcourse.notes.data.DataManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListViewExampleActivity extends AppCompatActivity {
