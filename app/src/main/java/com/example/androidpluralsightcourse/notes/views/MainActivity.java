@@ -2,7 +2,6 @@ package com.example.androidpluralsightcourse.notes.views;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +23,10 @@ import com.example.androidpluralsightcourse.R;
 import com.example.androidpluralsightcourse.databinding.ActivityMainBinding;
 import com.example.androidpluralsightcourse.notes.adapter.CoursesAdapter;
 import com.example.androidpluralsightcourse.notes.adapter.NotesAdapter;
-import com.example.androidpluralsightcourse.notes.models.CourseInfo;
 import com.example.androidpluralsightcourse.notes.data.DataManager;
-import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperOpenHelper;
+import com.example.androidpluralsightcourse.notes.models.CourseInfo;
+import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -38,18 +37,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private NotesAdapter notesAdapter;
     private CoursesAdapter coursesAdapter;
+    private NoteKeeperOpenHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initOpenHelper();
         setPrefDefaultValues();
         displayNotes();
         navigateToCreateNewNote();
         setUpSupportActionBar();
         setupDrawerToggle();
         setUpNavigationView();
+    }
+
+    private void initOpenHelper() {
+        dbHelper = new NoteKeeperOpenHelper(this);
     }
 
     private void setPrefDefaultValues(){
@@ -176,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void displayNotes(){
-        DataManager.loadDataFromDatabase(new NoteKeeperOpenHelper(this));
+        DataManager.loadDataFromDatabase(dbHelper);
 
         RecyclerView recyclerView = binding.appBarMain.contentMain.contentRecyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -190,5 +195,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setMenuItemChecked(int menuId){
         NavigationView navView = binding.navView;
         navView.getMenu().findItem(menuId).setChecked(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbHelper.close();
+        super.onDestroy();
     }
 }
