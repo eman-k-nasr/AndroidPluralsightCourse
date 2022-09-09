@@ -2,6 +2,7 @@ package com.example.androidpluralsightcourse.notes.views;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.example.androidpluralsightcourse.notes.adapter.NotesAdapter;
 import com.example.androidpluralsightcourse.notes.data.CourseInfo;
 import com.example.androidpluralsightcourse.notes.data.DataManager;
 import com.example.androidpluralsightcourse.notes.data.NoteInfo;
+import com.example.androidpluralsightcourse.notes.local.NoteKeeperOpenHelper;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -36,12 +38,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private NotesAdapter notesAdapter;
     private CoursesAdapter coursesAdapter;
+    private NoteKeeperOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initializeSqliteOpenHelper();
         setPrefDefaultValues();
         displayNotes();
         navigateToCreateNewNote();
@@ -49,6 +53,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupDrawerToggle();
         setUpNavigationView();
 
+    }
+
+    private void initializeSqliteOpenHelper(){
+        mDbOpenHelper = new NoteKeeperOpenHelper(this);
+    }
+
+    private void accessDatabase(){
+        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
     }
 
     private void setPrefDefaultValues(){
@@ -175,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void displayNotes(){
+        accessDatabase();
         RecyclerView recyclerView = binding.appBarMain.contentMain.contentRecyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
