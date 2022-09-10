@@ -108,8 +108,13 @@ public class NoteActivity extends AppCompatActivity
     }
 
     private void createNewNote() {
-        mNoteID = DataManager.getInstance().createNewNote();
-//        mNote = getNoteByPosition(mNoteID);
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
+
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        mNoteID = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
     }
 
     @Override
