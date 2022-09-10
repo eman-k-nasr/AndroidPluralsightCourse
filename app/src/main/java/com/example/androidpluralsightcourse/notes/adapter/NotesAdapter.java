@@ -1,6 +1,9 @@
 package com.example.androidpluralsightcourse.notes.adapter;
 
+import static android.provider.BaseColumns._ID;
 import static com.example.androidpluralsightcourse.notes.Constants.NOTE_ID;
+import static com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.CourseInfoEntry.COLUMN_COURSE_TITLE;
+import static com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract;
-import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry;
-import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.example.androidpluralsightcourse.notes.views.NoteActivity;
-
-import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
@@ -40,9 +38,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     private void populateColumnPositions() {
         if(mNotesCursor == null)
             return;
-        mCoursePos = mNotesCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
-        mNoteTitlePos = mNotesCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
-        mIdPos = mNotesCursor.getColumnIndex(NoteInfoEntry._ID);
+        mCoursePos = mNotesCursor.getColumnIndex(COLUMN_COURSE_TITLE);
+        mNoteTitlePos = mNotesCursor.getColumnIndex(COLUMN_NOTE_TITLE);
+        mIdPos = mNotesCursor.getColumnIndex(_ID);
     }
 
     public void changeCursor(Cursor cursor) {

@@ -290,34 +290,23 @@ public class NoteActivity extends AppCompatActivity
     }
 
     private void displayNote(Cursor cursor) {
-        mNote = getNoteData(cursor);
-        setNoteData();
-    }
-
-    private NoteInfo getNoteData(Cursor cursor) {
         int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
 
         boolean hasNext = cursor.moveToNext();
         if(hasNext){
-            String courseId = cursor.getString(courseIdPos);
             String noteTitle = cursor.getString(noteTitlePos);
             String noteText = cursor.getString(noteTextPos);
+            String courseId = cursor.getString(courseIdPos);
 
-            CourseInfo course = DataManager.getInstance().getCourse(courseId);
-            return new NoteInfo(course,noteTitle,noteText);
+            int selectedCourseIndex = getIndexOfCourseByID(courseId);
+            spinnerCourses.setSelection(selectedCourseIndex);
+            noteTitleEditText.setText(noteTitle);
+            noteTextEditText.setText(noteText);
         }
-
-        return new NoteInfo(DataManager.getInstance().getCourse("android_intents"),"","");
     }
 
-    private void setNoteData(){
-        int selectedCourseIndex = getIndexOfCourseByID(mNote.getCourse().getCourseId());
-        spinnerCourses.setSelection(selectedCourseIndex);
-        noteTitleEditText.setText(mNote.getTitle());
-        noteTextEditText.setText(mNote.getText());
-    }
 
     private int getIndexOfCourseByID(String id) {
         Cursor cursor = adapterCourses.getCursor();

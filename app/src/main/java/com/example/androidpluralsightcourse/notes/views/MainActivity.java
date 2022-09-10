@@ -30,15 +30,11 @@ import com.example.androidpluralsightcourse.R;
 import com.example.androidpluralsightcourse.databinding.ActivityMainBinding;
 import com.example.androidpluralsightcourse.notes.adapter.CoursesAdapter;
 import com.example.androidpluralsightcourse.notes.adapter.NotesAdapter;
-import com.example.androidpluralsightcourse.notes.data.DataManager;
+import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperOpenHelper;
-import com.example.androidpluralsightcourse.notes.models.CourseInfo;
-import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -196,19 +192,14 @@ public class MainActivity extends AppCompatActivity
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,
                 getResources().getInteger(R.integer.courses_grid_span));
         recyclerView.setLayoutManager(layoutManager);
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        coursesAdapter = new CoursesAdapter(this, courses);
         recyclerView.setAdapter(coursesAdapter);
         setMenuItemChecked(R.id.menu_courses_item);
     }
 
     private void displayNotes(){
-        DataManager.loadDataFromDatabase(dbHelper);
-
         RecyclerView recyclerView = binding.appBarMain.contentMain.contentRecyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        List<NoteInfo> notes = DataManager.getInstance().getNotes();
         notesAdapter = new NotesAdapter(this, null);
         recyclerView.setAdapter(notesAdapter);
         setMenuItemChecked(R.id.menu_notes_item);
@@ -233,13 +224,20 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public Cursor loadInBackground() {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
-                    final String[] noteColumns = {
-                            NoteInfoEntry._ID,
+                    String[] noteColumns = {
+                            NoteInfoEntry.getQName(NoteInfoEntry._ID),
                             NoteInfoEntry.COLUMN_NOTE_TITLE,
-                            NoteInfoEntry.COLUMN_COURSE_ID};
-                    final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
+                            CourseInfoEntry.COLUMN_COURSE_TITLE};
+
+                    String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
-                    return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+
+                    String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
+                            CourseInfoEntry.TABLE_NAME + " ON " +
+                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " +
+                            CourseInfoEntry.getQName( CourseInfoEntry.COLUMN_COURSE_ID);
+
+                    return db.query(tablesWithJoin, noteColumns,
                             null, null, null, null, noteOrderBy);
                 }
             };
