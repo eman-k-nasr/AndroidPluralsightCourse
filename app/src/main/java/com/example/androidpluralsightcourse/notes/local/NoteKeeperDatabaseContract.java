@@ -17,6 +17,11 @@ public final class NoteKeeperDatabaseContract {
                         COLUMN_COURSE_ID + " TEXT UNIQUE NOT NULL, " +
                         COLUMN_COURSE_TITLE + " TEXT NOT NULL)";
 
+        public static final String INDEX_ON_COURSE_TITLE = TABLE_NAME + "_index1";
+        public static final String SQL_CREATE_COURSE_TITLE_INDEX =
+                "CREATE INDEX " + INDEX_ON_COURSE_TITLE + " ON " + TABLE_NAME +
+                        "(" + COLUMN_COURSE_TITLE + ")";
+
         public static String getQName(String columnName) {
             return TABLE_NAME + "." + columnName;
         }
@@ -34,6 +39,11 @@ public final class NoteKeeperDatabaseContract {
                         COLUMN_NOTE_TITLE + " TEXT NOT NULL, " +
                         COLUMN_NOTE_TEXT + " TEXT, " +
                         COLUMN_COURSE_ID + " TEXT NOT NULL)";
+
+        public static final String INDEX_ON_NOTE_TITLE = TABLE_NAME + "_index1";
+        public static final String SQL_CREATE_NOTE_TITLE_INDEX =
+                "CREATE INDEX " + INDEX_ON_NOTE_TITLE + " ON " + TABLE_NAME +
+                        "(" + COLUMN_NOTE_TITLE + ")";
 
         public static String getQName(String columnName) {
             return TABLE_NAME + "." + columnName;
