@@ -5,6 +5,7 @@ import static com.example.androidpluralsightcourse.notes.Constants.LOADER_COURSE
 import static com.example.androidpluralsightcourse.notes.Constants.LOADER_NOTES;
 import static com.example.androidpluralsightcourse.notes.Constants.NOTE_ID;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -24,26 +25,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.androidpluralsightcourse.R;
-import com.example.androidpluralsightcourse.notes.data.DataManager;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.example.androidpluralsightcourse.notes.local.NoteKeeperOpenHelper;
 import com.example.androidpluralsightcourse.notes.models.CourseInfo;
-import com.example.androidpluralsightcourse.notes.models.NoteInfo;
 
 public class NoteActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>
 {
     public static final String NOTE_INFO = "com.example.androidpluralsightcourse.notes.data.NOTE_INFO";
-    private NoteInfo mNote;
     private int mNoteID;
 
     private boolean mIsNewNote;
     private boolean mIsCancelling;
-
-    private String mOriginalNoteCourseId;
-    private String mOriginalNoteTitle;
-    private String mOriginalNoteText;
 
     private EditText noteTitleEditText;
     private EditText noteTextEditText;
@@ -88,7 +82,6 @@ public class NoteActivity extends AppCompatActivity
             args.putInt(NOTE_ID,noteId);
             getLoaderManager().initLoader(LOADER_NOTES, args, this);
         }
-//        saveOriginalNoteValues();
     }
 
     private void setUpCustomToolBar(){
@@ -122,14 +115,19 @@ public class NoteActivity extends AppCompatActivity
         super.onPause();
         if(mIsCancelling){
             if(mIsNewNote){
-                DataManager.getInstance().removeNote(mNoteID);
-            }else{
-                storePreviousNoteValues();
+                deleteNoteFromDatabase();
             }
         }else{
             saveCurrentNote();
         }
 
+    }
+
+    private void deleteNoteFromDatabase() {
+        final String selection = NoteInfoEntry._ID + " = ?";
+        final String[] selectionArgs = {Integer.toString(mNoteID)};
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
@@ -144,9 +142,6 @@ public class NoteActivity extends AppCompatActivity
         switch (id){
             case R.id.action_send_email:
                 sendEmail();
-                break;
-            case R.id.action_next:
-                moveToNextNote();
                 break;
             case R.id.action_cancel:
                 mIsCancelling = true;
@@ -166,31 +161,6 @@ public class NoteActivity extends AppCompatActivity
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(intent);
-    }
-
-    private void moveToNextNote(){
-//        saveCurrentNote();
-//        getNextNote();
-//        saveOriginalNoteValues();
-//        displayNote();
-//        invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem nextMenuItem = menu.findItem(R.id.action_next);
-        int lastNoteIndex = DataManager.getInstance().getNotes().size() -1 ;
-        nextMenuItem.setEnabled(mNoteID != lastNoteIndex);
-        return super.onPrepareOptionsMenu(menu);
-    }
-    
-    private void getNextNote(){
-//        ++mNotePosition;
-//        mNote = getNoteByPosition(mNotePosition);
-    }
-
-    private NoteInfo getNoteByPosition(int position){
-        return DataManager.getInstance().getNotes().get(position);
     }
 
     private void saveCurrentNote() {
@@ -221,20 +191,6 @@ public class NoteActivity extends AppCompatActivity
         db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    private void saveOriginalNoteValues() {
-        if(mIsNewNote) return;
-        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
-        mOriginalNoteTitle = mNote.getTitle();
-        mOriginalNoteText = mNote.getText();
-    }
-
-    private void storePreviousNoteValues() {
-        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
-        mNote.setCourse(course);
-        mNote.setTitle(mOriginalNoteTitle);
-        mNote.setText(mOriginalNoteText);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = null;
@@ -263,6 +219,7 @@ public class NoteActivity extends AppCompatActivity
         };
     }
 
+    @SuppressLint("StaticFieldLeak")
     private CursorLoader createLoaderNotes(int id) {
         mNotesQueryFinished = false;
         return new CursorLoader(this) {

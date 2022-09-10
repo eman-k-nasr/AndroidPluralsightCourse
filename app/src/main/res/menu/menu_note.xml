@@ -9,14 +9,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_next"
-        android:icon="@android:drawable/ic_media_next"
-        android:orderInCategory="100"
-        android:title="@string/action_next"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_cancel"
         android:icon="@android:drawable/ic_menu_revert"
         android:orderInCategory="100"
